@@ -8,41 +8,9 @@ library(scales)
 
 
 deposition_data<-read.csv('C:/Users/hrlexd/Dropbox/PlantAndFood (1)/B4BI/Review_paper2024/Stigma_counts_SVGanalyses_eddy_nokiwi.csv',header=T)
-#correcting naming issues
-#reducing to these groups
-#'Control','Bombus terrestris','Apis mellifera','Lasioglossum spp','Leioproctus spp','Leioproctus fulvescens','Bombus hortorum/ruderatus'
-deposition_data$Bee_species <- gsub("\\.", "", deposition_data$Bee_species)
-deposition_data$Bee_species <- gsub("\\*", "", deposition_data$Bee_species)
-deposition_data$Bee_species <- gsub("Lasioglossum sordidum/\\cognatum", "Lasioglossum spp", deposition_data$Bee_species)
-deposition_data$Bee_species <- gsub("Lasioglossum sordidum", "Lasioglossum spp", deposition_data$Bee_species)
-deposition_data$Bee_species <- gsub("Leioproctus sp", "Leioproctus spp", deposition_data$Bee_species)
-deposition_data$Bee_species <- gsub("Leioproctus huakiwi\\/imitatus", "Leioproctus spp", deposition_data$Bee_species)
-deposition_data$Bee_species <- gsub("Leioproctus huakiwi", "Leioproctus spp", deposition_data$Bee_species)
-deposition_data$Bee_species <- gsub("Bombus hortorum", "Bombus hortorum/ruderatus", deposition_data$Bee_species)
-unique(deposition_data$Bee_species)
 
-#kiwifruit data comes from 
-#Broussard MA, Howlett BG, Evans LJ, McBrydie H, Cutting BT, Read SFJ, Pattemore DE. 2022. Pollinator #identity and behavior affect pollination in kiwifruit (Actinidia chinensis Planch.) PeerJ 10:e12963
-#data available in supplementary
-deposition_data_kiwi<-read.csv('SVDs-2013-2015-Hayward.csv',header=T)
-
-#sum pollen counts and fix names of groups, filter for just bees (hymenoptera)
-#columns of interest pollen count = male.pollen.rest.stigmas.est + male.pollen.first.stigma
-deposition_data_kiwi_fix<-deposition_data_kiwi %>% dplyr::select(Crop,Order,tax,Male.pollen.first.stigma,Male.pollen.rest.stigmas.est) %>% mutate(Pollen_deposition=Male.pollen.first.stigma+Male.pollen.rest.stigmas.est) %>% dplyr::select(-Male.pollen.first.stigma,-Male.pollen.rest.stigmas.est) %>% filter(Order=='Hymenoptera'|tax=='control'|tax=='Control')%>% dplyr::select(-Order) %>% drop_na(Pollen_deposition)
-
-#fix names to match other crop species
-unique(deposition_data_kiwi_fix$tax)
-deposition_data_kiwi_fix<-deposition_data_kiwi_fix %>% mutate(Bee_species = str_replace(tax, "control", "Control")) %>% dplyr::select(-tax) %>% mutate(Bee_species = str_replace(Bee_species, "Bombus ruderatus", "Bombus hortorum/ruderatus"))
-unique(deposition_data_kiwi_fix$Bee_species)
-deposition_data_kiwi_fix$Bee_species <- gsub("\\.", "", deposition_data_kiwi_fix$Bee_species)
-unique(deposition_data_kiwi_fix$Crop)
-deposition_data_kiwi_fix$Crop <- gsub("kiwifruit", "Kiwifruit", deposition_data_kiwi_fix$Crop)
-
-
-#bind two data frames together
-colnames(deposition_data_kiwi_fix)
-colnames(deposition_data)
-deposition_data_all<-bind_rows(deposition_data,deposition_data_kiwi_fix)
+#note I've removed all the code for data wrangling this is of the cleaned data
+deposition_data_all<-read.table('Deposition_data_pollen_transfer_analysis_allcrops.csv',sep=',',quote='',row.names = NULL,header=T)
 
 #remake boxplots
 #relevel to put controls at the end:
