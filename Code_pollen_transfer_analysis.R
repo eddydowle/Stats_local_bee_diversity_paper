@@ -10,7 +10,7 @@ library(scales)
 deposition_data<-read.csv('C:/Users/hrlexd/Dropbox/PlantAndFood (1)/B4BI/Review_paper2024/Stigma_counts_SVGanalyses_eddy_nokiwi.csv',header=T)
 
 #note I've removed all the code for data wrangling this is of the cleaned data
-deposition_data_all<-read.table('Deposition_data_pollen_transfer_analysis_allcrops.csv',sep=',',quote='',row.names = NULL,header=T)
+deposition_data_all<-read.table('C:/Users/hrlexd/Dropbox/PlantAndFood (1)/B4BI/Review_paper2024/Deposition_data_pollen_transfer_analysis_allcrops.csv',sep=',',quote='',row.names = NULL,header=T)
 
 #remake boxplots
 #relevel to put controls at the end:
@@ -32,6 +32,17 @@ ggplot(deposition_data_all,aes(x=Crop,y=Pollen_deposition,fill=Bee_species))+
   scale_fill_manual(values=with(brads_col,setNames(species_col,species)))+
   labs(y= "Pollen deposition") + guides(fill=guide_legend(title="Species")) + 
   coord_trans(y='log1p')
+
+#boxplot using log1p scale
+ggplot(deposition_data_all,aes(x=Crop,y=Pollen_deposition,fill=Bee_species))+
+  geom_boxplot(outliers = FALSE)+
+  geom_jitter(position = position_jitterdodge(jitter.width=.3),colour='black',pch=21,alpha = 0.4)+
+  facet_wrap(~Crop,scale='free', ncol = 4)+
+  theme_bw()+
+  scale_fill_manual(values=with(brads_col,setNames(species_col,species)))+
+  labs(y= "Pollen deposition") + guides(fill=guide_legend(title="Species")) + 
+  coord_trans(y='log1p')
+
 
 #doing a kruskal-wallis and Dunn test for each group
 kruskal_table_out<-NULL

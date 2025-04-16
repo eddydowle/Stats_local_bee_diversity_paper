@@ -11,6 +11,7 @@ library(FSA)
 setwd('C:/Users/hrlexd/Dropbox/PlantAndFood (1)/B4BI/Review_paper2024/')
 #cleaned data of behaviour (much data wrangling to get it cleaned)
 crops_together<-read.csv('Behaviour_data_different_crops_eddyJan2025.csv',quote="",row.names = NULL,header=T, check.names = FALSE)
+crops_together<-read.csv('Behaviour_data_different_crops_eddyJan2025_april_extrabees.csv',quote="",row.names = NULL,header=T, check.names = FALSE)
 
 #summary table
 #number of individuals 
@@ -50,6 +51,16 @@ crops_together_inflorescenceMin<-crops_together %>% group_by(Crop,`Full scientif
 
 crops_together_inflorescenceMin%>% 
   ggplot(aes(x=Crop,y=inflorescencePerMin,fill=`Full scientific name`)) + geom_boxplot()+
+  facet_wrap(~Crop,scale='free', ncol = 4)+
+  theme_bw()+
+  scale_fill_manual(values=with(brads_col,setNames(species_col,species)))+
+  labs(y= "Estimated inflorescence/umbel/flower visits per minute") + guides(fill=guide_legend(title="Species"))+
+  coord_trans(y='log1p')
+
+crops_together_inflorescenceMin%>% 
+  ggplot(aes(x=Crop,y=inflorescencePerMin,fill=`Full scientific name`)) + 
+  geom_boxplot(outliers = FALSE)+
+  geom_jitter(position = position_jitterdodge(jitter.width=.11),colour='black',pch=21,alpha = 0.4)+
   facet_wrap(~Crop,scale='free', ncol = 4)+
   theme_bw()+
   scale_fill_manual(values=with(brads_col,setNames(species_col,species)))+
@@ -112,6 +123,14 @@ head(crops_together_summarytable)
 #boxplot
 crops_together_summarytable %>% filter(Crop!='Avocado'&Crop!='Kiwifruit'&Crop!='Carrot') %>% 
   ggplot(aes(x=Crop,y=ave_num_stigmatouches_per_inflorsense,fill=`Full scientific name`)) + geom_boxplot()+
+  facet_wrap(~Crop,scale='free', ncol = 3)+
+  theme_bw()+
+  scale_fill_manual(values=with(brads_col,setNames(species_col,species)))+
+  labs(y= "Average number stigma touches per flowering unit") + guides(fill=guide_legend(title="Species"))
+crops_together_summarytable %>% filter(Crop!='Avocado'&Crop!='Kiwifruit'&Crop!='Carrot') %>% 
+  ggplot(aes(x=Crop,y=ave_num_stigmatouches_per_inflorsense,fill=`Full scientific name`)) +
+  geom_boxplot(outliers = FALSE)+
+  geom_jitter(position = position_jitterdodge(jitter.width=.11),colour='black',pch=21,alpha = 0.4)+
   facet_wrap(~Crop,scale='free', ncol = 3)+
   theme_bw()+
   scale_fill_manual(values=with(brads_col,setNames(species_col,species)))+
